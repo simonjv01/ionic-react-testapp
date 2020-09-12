@@ -1,5 +1,5 @@
-import React from 'react';
-import { IonApp, IonHeader, IonContent, IonToolbar, IonTitle, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonIcon } from '@ionic/react';
+import React, { useRef, useState } from 'react';
+import { IonApp, IonHeader, IonContent, IonToolbar, IonTitle, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonCard, IonCardContent } from '@ionic/react';
 import { calculatorOutline, refreshOutline} from 'ionicons/icons';
 
 
@@ -23,7 +23,30 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+
+  const weightInputRef = useRef<HTMLIonInputElement>(null);
+  const heightInputRef = useRef<HTMLIonInputElement>(null);
+
+  const calculateBMI = () => {
+    const enteredWeight = weightInputRef.current!.value;
+    const enteredHeight = heightInputRef.current!.value;
+
+    if(!enteredHeight || !enteredWeight) {
+      return;
+    }
+
+    const bmi = +enteredWeight / (+enteredHeight * +enteredHeight);
+
+    console.log(bmi);
+  };
+
+  const resetInputs = () => {
+    weightInputRef.current!.value = '';
+    heightInputRef.current!.value = '';
+  };
+
+  return (
   <IonApp>
    <IonHeader>
      <IonToolbar>
@@ -38,7 +61,7 @@ const App: React.FC = () => (
              <IonLabel position="floating">
                Your Height
              </IonLabel>
-             <IonInput></IonInput>
+             <IonInput ref={heightInputRef}> </IonInput>
            </IonItem>
            </IonCol>
            </IonRow>
@@ -48,14 +71,14 @@ const App: React.FC = () => (
              <IonLabel position="floating">
                Your Weight
              </IonLabel>
-             <IonInput></IonInput>
+             <IonInput ref={weightInputRef}> </IonInput>
            </IonItem>
              </IonCol>
            </IonRow>
            <IonRow>
              <IonCol className="ion-text-left">
              <IonItem>
-             <IonButton>
+             <IonButton onClick={calculateBMI}>
                <IonIcon slot="start" icon={calculatorOutline} />
                Calculate
              </IonButton>
@@ -63,7 +86,7 @@ const App: React.FC = () => (
              </IonCol>
               <IonCol className="ion-text-right">
              <IonItem>
-             <IonButton>
+             <IonButton onClick={resetInputs}>
                <IonIcon slot="start" icon={refreshOutline}/>
                Reset
              </IonButton>
@@ -72,13 +95,17 @@ const App: React.FC = () => (
           </IonRow>
           <IonRow>
             <IonCol>
-
+              <IonCard>
+                <IonCardContent>
+                  <h2></h2>
+                </IonCardContent>
+              </IonCard>
             </IonCol>
           </IonRow>
      </IonGrid>
        
      </IonContent>
-  </IonApp>
-);
+  </IonApp> );
+};
 
 export default App;
